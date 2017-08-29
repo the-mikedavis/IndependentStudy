@@ -25,12 +25,14 @@ class Particle {
     PVector velocity;
     PVector acceleration;
     float lifespan;
+    color c;
     
     Particle(PVector l) {
         location = l.get();
         velocity = new PVector(random(-1, 1), random(-2, 0));
         acceleration = new PVector(0, 0.05);
         lifespan = 255;
+        c = color(round(random(255)), round(random(255)), round(random(255)));
     }
     
     void update() {
@@ -41,7 +43,7 @@ class Particle {
     
     void display() {
         stroke(0, lifespan);
-        fill(175, lifespan);
+        fill(c, lifespan);
         rect(location.x, location.y, 10, 10);
     }
     
