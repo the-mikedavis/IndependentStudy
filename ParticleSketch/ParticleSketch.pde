@@ -1,22 +1,38 @@
 import java.util.Iterator;
-ArrayList<Particle> particles;
+ParticleSystem ps;
 
 void setup() {
     size(640,360);
-    particles = new ArrayList<Particle>();
+    ps = new ParticleSystem(new PVector(width / 2, 30));
 }
 
 void draw() {
     background(255);
+    ps.addParticle();
+    ps.run();
+}
 
-    particles.add(new Particle(new PVector(width/2, 50)));
-    
-    Iterator<Particle> iter = particles.iterator();
-    while(iter.hasNext()) {
-        Particle p = iter.next();
-        p.run();
-        if (p.isDead())
-            iter.remove();
+class ParticleSystem {
+    ArrayList<Particle> particles;
+    PVector origin;
+
+    ParticleSystem(PVector location) {
+        origin = location.get();
+        particles = new ArrayList<Particles>();
+    }
+
+    void addParticle() {
+        particles.add(new Particle(origin));
+    }
+
+    void run() {
+        Iterator<Particle> it = particles.iterator();
+        while (it.hasNext()) {
+            Particle p = it.next();
+            p.run();
+            if (p.isDead())
+                it.remove();
+        }
     }
 }
 
