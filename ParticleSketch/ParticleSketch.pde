@@ -1,4 +1,6 @@
+import java.util.Iterator;
 ArrayList<Particle> particles;
+
 void setup() {
     size(640,360);
     particles = new ArrayList<Particle>();
