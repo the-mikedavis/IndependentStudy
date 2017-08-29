@@ -9,7 +9,7 @@ void draw() {
     background(255);
     ball.run();
 }
-
+//the point is to replace keyPressed with a clap
 void keyPressed() {
     ball.shoot();
 }
