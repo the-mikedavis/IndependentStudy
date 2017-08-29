@@ -18,7 +18,7 @@ class ParticleSystem {
 
     ParticleSystem(PVector location) {
         origin = location.get();
-        particles = new ArrayList<Particles>();
+        particles = new ArrayList<Particle>();
     }
 
     void addParticle() {
