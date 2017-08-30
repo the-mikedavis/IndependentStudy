@@ -1,3 +1,5 @@
+import processing.sound.*;
+AudioIn in;
 Ball ball;
 
 void setup() {
