@@ -12,6 +12,7 @@ float launchConstant = 4.0;
 int root;
 
 Ball ball;
+Bell bell;
 
 void setup() {
     size(540,960);
@@ -32,6 +33,7 @@ void setup() {
     launchConstant = (float) height / 240;
     
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
+    bell = new Bell();
 }
 
 void draw() {
@@ -160,8 +162,10 @@ class Ball {
         ellipse(location.x, location.y, 20, 20);
         if (location.y > 7*height/8)
             reset();
-        if (location.y < height / 8)
+        if (location.y < height / 8) {
             reflect();
+            bell.ring();
+        }
     }
     
     void reset() {
@@ -181,7 +185,7 @@ class Ball {
     }
     
     void applyGravity(PVector gravity) {
-        acceleration = gravity;   
+        acceleration = gravity;
     }
     
     void shoot(float force) {
@@ -190,5 +194,14 @@ class Ball {
         velocity = new PVector(0, (float) (-launchConstant * Math.log(force)));
         applyGravity(new PVector(0, 0.3));
         shot = true;
+    }
+}
+
+class Bell {
+    
+    Bell () {}
+
+    void ring () {
+        System.out.println("Ring!");
     }
 }
