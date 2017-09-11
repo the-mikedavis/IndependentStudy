@@ -68,6 +68,7 @@ void draw() {
         ball.shoot(average - thresh * limit);
         
     ball.run();
+    bell.draw();
 }
 
 void keyPressed() {
@@ -203,5 +204,11 @@ class Bell {
 
     void ring () {
         System.out.println("Ring!");
+    }
+    
+    void draw() {
+        stroke(0);
+        fill(200);
+        ellipse(width/2, height/8, 30, 30);
     }
 }
