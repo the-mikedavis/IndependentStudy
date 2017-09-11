@@ -8,6 +8,7 @@ float scale = 2000.0, smoothing = 0.001;
 float total, average, thresh;
 boolean render = false;
 float limit = 15.0;
+float launchConstant = 4.0;
 int root;
 
 Ball ball;
@@ -18,13 +19,17 @@ void setup() {
     in.start();
     fft = new FFT(this, bands);
     fft.input(in);
+    
     thresh = 10.0;
+    
     int splineCount = 100;
     baseLine = new Spline(splineCount, color(0));
     threshSpline = new Spline(splineCount, color(0, 0, 255));
     totalSpline = new Spline(splineCount, color(255, 0, 0));
     triggerSpline = new Spline(splineCount, color(0, 255, 0));
     root = 7 * height / 8;
+    
+    launchConstant = (float) height / 240;
     
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
 }
@@ -57,10 +62,8 @@ void draw() {
     }
     
     // Trigger statement
-    if (average > limit * thresh) {
-        System.out.println(average - thresh * limit);
+    if (average > limit * thresh)
         ball.shoot(average - thresh * limit);
-    }
         
     ball.run();
 }
@@ -178,7 +181,7 @@ class Ball {
     void shoot(float force) {
         if (shot)
             return;
-        velocity = new PVector(0, (float) (- 4.0 * Math.log(force)));
+        velocity = new PVector(0, (float) (-launchConstant * Math.log(force)));
         applyGravity(new PVector(0, 0.3));
         shot = true;
     }
