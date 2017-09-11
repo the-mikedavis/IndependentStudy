@@ -160,6 +160,8 @@ class Ball {
         ellipse(location.x, location.y, 20, 20);
         if (location.y > 7*height/8)
             reset();
+        if (location.y < height / 8)
+            reflect();
     }
     
     void reset() {
@@ -167,6 +169,10 @@ class Ball {
         location = new PVector(width/2, 7*height/8);
         velocity = new PVector(0, 0);
         acceleration = new PVector(0,0);
+    }
+
+    void reflect() {
+        velocity = new PVector(0, -velocity.y);
     }
     
     void update() {
