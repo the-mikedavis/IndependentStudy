@@ -13,9 +13,13 @@ int root;
 
 Ball ball;
 Bell bell;
+PImage img;
 
 void setup() {
     size(1080,1920);
+    
+    img = loadImage("data/drawing.jpg");
+    
     in = new AudioIn(this, 0);
     in.start();
     fft = new FFT(this, bands);
@@ -37,7 +41,7 @@ void setup() {
 }
 
 void draw() {
-    background(255);
+    background(img);
     
     
     fft.analyze();
