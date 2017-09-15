@@ -15,7 +15,7 @@ Ball ball;
 Bell bell;
 
 void setup() {
-    size(540,960);
+    size(1080,1920);
     in = new AudioIn(this, 0);
     in.start();
     fft = new FFT(this, bands);
