@@ -1,4 +1,5 @@
 import processing.sound.*;
+import java.util.Iterator;
 
 FFT fft;
 AudioIn in;
@@ -13,6 +14,8 @@ int root;
 
 Ball ball;
 Bell bell;
+ParticleSystem conf;
+int particleCount = 0;
 
 PImage img;
 SoundFile ring;
@@ -40,6 +43,7 @@ void setup() {
     
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
+    conf = new ParticleSystem(new PVector(width / 2, height / 8));
     
     ring = new SoundFile(this, "ring.mp3");
 }
@@ -74,7 +78,13 @@ void draw() {
     // Trigger statement
     if (average > limit * thresh)
         ball.shoot(average - thresh * limit);
-        
+    
+    if (particleCount > 0) {
+        conf.addParticle();
+        particleCount--;
+    }
+    
+    conf.run();
     ball.run();
     bell.draw();
 }
@@ -213,6 +223,7 @@ class Bell {
 
     void ring () {
         ring.play();
+        particleCount += 150;
         System.out.println("Ring!");
     }
     
@@ -220,5 +231,66 @@ class Bell {
         stroke(0);
         fill(200);
         ellipse(width/2, height/8, 30, 30);
+    }
+}
+
+class ParticleSystem {
+    ArrayList<Particle> particles;
+    PVector origin;
+
+    ParticleSystem(PVector location) {
+        origin = location.get();
+        particles = new ArrayList<Particle>();
+    }
+
+    void addParticle() {
+        particles.add(new Particle(origin));
+    }
+
+    void run() {
+        Iterator<Particle> it = particles.iterator();
+        while (it.hasNext()) {
+            Particle p = it.next();
+            p.run();
+            if (p.isDead())
+                it.remove();
+        }
+    }
+}
+
+class Particle {
+    PVector location;
+    PVector velocity;
+    PVector acceleration;
+    float lifespan;
+    color c;
+    
+    Particle(PVector l) {
+        location = l.get();
+        velocity = new PVector(random(-1, 1), random(-2, 0));
+        acceleration = new PVector(0, 0.05);
+        lifespan = 255;
+        c = color(round(random(255)), round(random(255)), round(random(255)));
+    }
+    
+    void update() {
+        velocity.add(acceleration);
+        location.add(velocity);
+        lifespan -= 1.0;
+    }
+    
+    void display() {
+        stroke(0, lifespan);
+        fill(c, lifespan);
+        rect(location.x, location.y, 10, 10);
+    }
+    
+    void run() {
+        update();
+        display();
+    }
+    
+    boolean isDead() {
+        return lifespan < 0.0;   
     }
 }
