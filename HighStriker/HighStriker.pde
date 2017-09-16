@@ -151,11 +151,12 @@ class Spline {    //combination of path generator & linked list (queue style)
 
 class Ball {
 
-    PVector location, velocity, acceleration;
+    PVector location, velocity, acceleration, ground;
     boolean shot = false;
     
     Ball (PVector location) {
         this.location = location;
+        this.ground = location.copy();
         velocity = new PVector(0, 0);    
         acceleration = new PVector(0, 0);
     }
@@ -165,7 +166,7 @@ class Ball {
         stroke(0);
         fill(175);
         ellipse(location.x, location.y, 20, 20);
-        if (location.y > 7*height/8)
+        if (location.y > ground.y)
             reset();
         if (location.y < height / 8) {
             reflect();
@@ -175,7 +176,7 @@ class Ball {
     
     void reset() {
         shot = false;
-        location = new PVector(width/2, 7*height/8);
+        location = ground.copy();
         velocity = new PVector(0, 0);
         acceleration = new PVector(0,0);
     }
