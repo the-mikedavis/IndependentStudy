@@ -13,7 +13,9 @@ int root;
 
 Ball ball;
 Bell bell;
+
 PImage img;
+SoundFile ring;
 
 void setup() {
     size(540, 960);
@@ -38,6 +40,8 @@ void setup() {
     
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
+    
+    ring = new SoundFile(this, "ring.mp3");
 }
 
 void draw() {
@@ -208,6 +212,7 @@ class Bell {
     Bell () {}
 
     void ring () {
+        ring.play();
         System.out.println("Ring!");
     }
     
