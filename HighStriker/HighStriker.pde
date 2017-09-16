@@ -16,9 +16,9 @@ Bell bell;
 PImage img;
 
 void setup() {
-    size(1080,1920);
+    size(540, 960);
     
-    img = loadImage("data/drawing.jpg");
+    img = loadImage("data/drawinghalf.jpg");
     
     in = new AudioIn(this, 0);
     in.start();
