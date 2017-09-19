@@ -294,3 +294,19 @@ class Particle {
         return lifespan < 0.0;   
     }
 }
+
+class Bird {
+    PVector location, velocity;
+    
+    Bird(PVector start, PVector velocity) {
+        this.location = start;
+        this.velocity = velocity;
+    }
+    
+    void run () {
+        this.location.add(this.velocity);
+        stroke(0);
+        fill(20);
+        ellipse(location.x, location.y, 5, 5);
+    }
+}
