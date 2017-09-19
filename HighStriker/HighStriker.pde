@@ -15,6 +15,7 @@ int root;
 Ball ball;
 Bell bell;
 ParticleSystem conf;
+BirdSystem birds;
 int particleCount = 0;
 
 PImage img;
@@ -44,13 +45,13 @@ void setup() {
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
     conf = new ParticleSystem(new PVector(width / 2, height / 8));
-    
+    birds = new BirdSystem(2);
     ring = new SoundFile(this, "ring.mp3");
 }
 
 void draw() {
-    background(img);
-    
+    //background(img);
+    background(255);
     
     fft.analyze();
     total = 0;
@@ -86,6 +87,7 @@ void draw() {
     
     conf.run();
     ball.run();
+    birds.run();
     bell.draw();
 }
 
@@ -127,6 +129,7 @@ class Spline {    //combination of path generator & linked list (queue style)
     void render() {
         noFill();
         stroke(this.col);
+        strokeWeight(1);
         beginShape();
         int i = 0;
         for (Node e = root; e != null; e = e.next) {
@@ -178,6 +181,7 @@ class Ball {
     void run () {
         update();
         stroke(0);
+        strokeWeight(1);
         fill(175);
         ellipse(location.x, location.y, 20, 20);
         if (location.y > ground.y)
@@ -230,6 +234,7 @@ class Bell {
     void draw() {
         stroke(0);
         fill(200);
+        strokeWeight(1);
         ellipse(width/2, height/8, 30, 30);
     }
 }
@@ -281,6 +286,7 @@ class Particle {
     
     void display() {
         stroke(0, lifespan);
+        strokeWeight(0);
         fill(c, lifespan);
         rect(location.x, location.y, 10, 10);
     }
@@ -304,9 +310,57 @@ class Bird {
     }
     
     void run () {
+        float frame = (float) Math.abs(60 - frameCount % 120);
+        float angle = map(frame, 0.0, 60.0, (float)(5*Math.PI/6), (float)(4*Math.PI/3));
+        float x = 12 * (float) Math.cos(angle),
+            y = 12 * (float) Math.sin(angle);
+        
         this.location.add(this.velocity);
-        stroke(0);
+        strokeWeight(1);
         fill(20);
         ellipse(location.x, location.y, 5, 5);
+        strokeWeight(3);
+        line(location.x, location.y, location.x - 8, location.y - 5);
+        line(location.x, location.y, location.x + 8, location.y - 5);
+        strokeWeight(2);
+        line(location.x - 8, location.y - 5, location.x - 8 + x, location.y - 5 + y);
+        line(location.x + 8, location.y - 5, location.x + 8 - x, location.y - 5 + y);
+    }
+    
+    boolean isDead() {
+        return location.x < 0 || location.x > width;
+    }
+}
+
+class BirdSystem {
+    ArrayList<Bird> birds;
+    float speed = 1.5;
+    
+    BirdSystem (int count) {
+        birds = new ArrayList<Bird>(count);
+        for (int i = 0; i < count; i++)
+            this.addBird();
+    }
+    
+    void run () {
+        Iterator<Bird> it = birds.iterator();
+        while (it.hasNext()) {
+            Bird b = it.next();
+            b.run();
+            if (b.isDead()) {
+                it.remove();
+                addBird();
+                break;
+            }
+        }
+    }
+    
+    void addBird() {
+        //give it random height and starting side
+        int x = Math.round(Math.random()) == 0L ? 0 : width,
+            y = (int)(Math.random()*(height / 8)) + height / 4;
+        Bird newBird = new Bird(new PVector(x, y),
+            new PVector((x == width ? -speed : speed) + (float)Math.random(), 0));
+        birds.add(newBird);
     }
 }
