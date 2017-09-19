@@ -303,14 +303,16 @@ class Particle {
 
 class Bird {
     PVector location, velocity;
+    int offset;
     
     Bird(PVector start, PVector velocity) {
         this.location = start;
         this.velocity = velocity;
+        offset = (int) (Math.random() * 30);
     }
     
     void run () {
-        float frame = (float) Math.abs(60 - frameCount % 120);
+        float frame = (float) Math.abs(60 - (frameCount + offset) % 120);
         float angle = map(frame, 0.0, 60.0, (float)(5*Math.PI/6), (float)(4*Math.PI/3));
         float x = 12 * (float) Math.cos(angle),
             y = 12 * (float) Math.sin(angle);
