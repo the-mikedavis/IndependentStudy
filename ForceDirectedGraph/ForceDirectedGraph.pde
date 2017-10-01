@@ -5,12 +5,12 @@ Body center;
 
 void setup () {
     size(540, 540);
-    system = new FDGraph(50);   
-    center = new Body(10f, -10f);
+    system = new FDGraph(1);   
+    center = new Body(10f, 15f, new PVector(width / 2, height / 2));
 }
 
 void draw () {
-    //background(255);
+    background(255);
     system.run();
 }
 
@@ -68,6 +68,15 @@ class Body {
         this.mass = mass;
         this.charge = charge;
     }
+    
+    Body (float mass, float charge, PVector location) {
+        this.radius = (int) mass * 25;
+        this.mass = mass;
+        this.charge = charge;
+        this.location = location;
+        velocity = new PVector(0,0);
+        acceleration = new PVector(0,0);
+    }
 
     void render () {
         ellipse(location.x, location.y, radius, radius);
@@ -75,6 +84,7 @@ class Body {
 
     void update () {
         this.applyGravity();
+        this.applyCharge(center);
         velocity.add(acceleration);
         location.add(velocity);
         acceleration.mult(0);
@@ -87,7 +97,14 @@ class Body {
 
     //  Repelling force
     void applyCharge (Body o) {
-        
+        float C = 1f;
+        PVector force = PVector.sub(this.location, o.location);
+        float dist = force.mag();
+        //  always repel when they have the same signs
+        float m = (C * this.charge * o.charge) / (dist * dist);
+        force.normalize();
+        force.mult(m);
+        this.applyForce(force);
     }
 
     void applySpring (Body o) {
@@ -96,11 +113,13 @@ class Body {
 
     //  Suck into the center of the pane
     void applyGravity () {
-        float G = 100f;
-        PVector center = new PVector(width / 2, height / 2);
-        PVector force = PVector.sub(this.location, center);
+        float G = 0.1;
+        //PVector center = new PVector(width / 2, height / 2);
+        PVector force = PVector.sub(this.location, center.location);
         float dist = force.mag();
-        float m = - (G * this.mass * this.mass) / (dist * dist);
+        //  negative because it's an attractive force.
+        float m = - (G * this.mass * center.mass) / (dist);
+        //System.out.println(m);
         force.normalize();
         force.mult(m);
         this.applyForce(force);
