@@ -1,14 +1,16 @@
 import java.util.ArrayList;
 
 FDGraph system;
+Body center;
 
 void setup () {
     size(540, 540);
-    system = new FDGraph(50);    
+    system = new FDGraph(50);   
+    center = new Body(10f, -10f);
 }
 
 void draw () {
-    background(255);
+    //background(255);
     system.run();
 }
 
@@ -23,7 +25,7 @@ class FDGraph {
     }
 
     boolean add () {
-        return system.add(new Body(50));
+        return system.add(new Body(2f, 2f));
     }
 
     Body remove () {
@@ -38,8 +40,8 @@ class FDGraph {
         for (Body a : system) {
             for (Body b : system)
                 if (!a.equals(b))
-                    a.applyForce(b);
-            a.applyGravity();
+                    a.applyForceTo(b);
+            a.update();
         }
     }
 
@@ -54,26 +56,38 @@ class FDGraph {
 
 class Body {
 
-    int x, y, radius;
+    int radius;
     PVector location, velocity, acceleration;
+    float mass, charge;
 
-    Body (int radius) {
-        this.radius = radius;
-        this.x = (int) (Math.random() * width);
-        this.y = (int) (Math.random() * height);
+    Body (float mass, float charge) {
+        this.radius = 50;
+        location = new PVector(random(width), random(height));
+        velocity = new PVector(0, 0);
+        acceleration = new PVector(0, 0);
+        this.mass = mass;
+        this.charge = charge;
     }
 
     void render () {
-        ellipse(x, y, radius, radius);
+        ellipse(location.x, location.y, radius, radius);
     }
 
-    void applyForce (Body o) {
+    void update () {
+        this.applyGravity();
+        velocity.add(acceleration);
+        location.add(velocity);
+        acceleration.mult(0);
+    }
+
+    void applyForceTo (Body o) {
         this.applyCharge(o);
         this.applySpring(o);
     }
 
+    //  Repelling force
     void applyCharge (Body o) {
-        double charge = 0.01;
+        
     }
 
     void applySpring (Body o) {
@@ -82,9 +96,21 @@ class Body {
 
     //  Suck into the center of the pane
     void applyGravity () {
-        double gravity = 0.03;
-        int x = width / 2,
-            y = height / 2;
+        float G = 100f;
+        PVector center = new PVector(width / 2, height / 2);
+        PVector force = PVector.sub(this.location, center);
+        float dist = force.mag();
+        float m = - (G * this.mass * this.mass) / (dist * dist);
+        force.normalize();
+        force.mult(m);
+        this.applyForce(force);
+    }
+
+    //  Nature of code
+    void applyForce (PVector force) {
+        PVector f = force.copy();
+        f.div(mass);
+        acceleration.add(f);
     }
 
 }
