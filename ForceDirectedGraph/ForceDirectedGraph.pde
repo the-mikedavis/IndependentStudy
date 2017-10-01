@@ -5,8 +5,8 @@ Body center;
 
 void setup () {
     size(540, 540);
-    system = new FDGraph(1);   
-    center = new Body(10f, 15f, new PVector(width / 2, height / 2));
+    system = new FDGraph(50);   
+    center = new Body(10f, 10f, new PVector(width / 2, height / 2));
 }
 
 void draw () {
@@ -25,7 +25,7 @@ class FDGraph {
     }
 
     boolean add () {
-        return system.add(new Body(2f, 2f));
+        return system.add(new Body(2f, 5f));
     }
 
     Body remove () {
@@ -93,12 +93,12 @@ class Body {
 
     void applyForceTo (Body o) {
         this.applyCharge(o);
-        this.applySpring(o);
+        //this.applySpring(o);
     }
 
     //  Repelling force
     void applyCharge (Body o) {
-        float C = 1f;
+        float C = 2f;
         PVector force = PVector.sub(this.location, o.location);
         float dist = force.mag();
         //  always repel when they have the same signs
@@ -124,7 +124,7 @@ class Body {
         PVector force = PVector.sub(this.location, center.location);
         float dist = force.mag();
         //  negative because it's an attractive force.
-        float m = - (G * this.mass * center.mass) / (dist);
+        float m = - (G * this.mass * center.mass) / (float)Math.cbrt(dist * dist);
         //System.out.println(m);
         force.normalize();
         force.mult(m);
