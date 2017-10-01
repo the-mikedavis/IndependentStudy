@@ -83,6 +83,7 @@ class Body {
     }
 
     void update () {
+        this.applyFriction();
         this.applyGravity();
         this.applyCharge(center);
         velocity.add(acceleration);
@@ -107,8 +108,13 @@ class Body {
         this.applyForce(force);
     }
 
-    void applySpring (Body o) {
-        double spring = 0.02;
+    void applyFriction () {
+        float c = 0.01;
+        PVector force = velocity.copy();
+        force.mult(-1);
+        force.normalize();
+        force.mult(c);
+        this.applyForce(force);
     }
 
     //  Suck into the center of the pane
