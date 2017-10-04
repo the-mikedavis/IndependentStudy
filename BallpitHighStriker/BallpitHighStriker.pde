@@ -19,7 +19,7 @@ Puck puck;
 
 void setup () {
     size(540, 960);
-    system = new FDGraph(100);   
+    system = new FDGraph(150);   
     center = new Body(10f, 10f, new PVector(width / 2, height / 4));
     
     puck = new Puck(0f, 0f, new PVector(width / 2, 7 * height / 8));
@@ -112,10 +112,13 @@ class FDGraph {
         for (Body a : system) {
             for (Body b : system)
                 if (!a.equals(b))
-                    a.applyForceFrom(b);
-            a.update();
-            a.applyForceFrom(puck);
+                    a.applyForceTo(b);
+            //a.update();
+            //a.applyForceTo(puck);
+            puck.deflect(a);
         }
+        for (Body a : system)
+            a.update();
     }
 
     void run () {
@@ -135,6 +138,7 @@ class Puck extends Body {
     Puck (float mass, float charge, PVector location) {
         super(mass, charge, location);
         ground = location.copy();
+        this.radius = 30;
     }
     
     void render () {
@@ -142,7 +146,7 @@ class Puck extends Body {
         stroke(0);
         strokeWeight(1);
         fill(175);
-        ellipse(location.x, location.y, 30, 30);
+        ellipse(location.x, location.y, radius, radius);
         if (location.y > ground.y)
             reset();
         if (location.y < height / 8) {
@@ -163,7 +167,6 @@ class Puck extends Body {
     
     @Override
     void update () {
-        charge = map(location.y, 7*height/8, height/8, 0, 40);
         velocity.add(acceleration);
         location.add(velocity);
     }
@@ -171,6 +174,25 @@ class Puck extends Body {
     @Override
     void applyGravity () {
         acceleration = new PVector(0, 0.3);
+    }
+    
+    @Override
+    void deflect (Body o) {
+        float dx = o.location.x - location.x,
+            dy = o.location.y - location.y,
+            distance = sqrt(dx*dx + dy*dy),
+            min = (float) (o.radius + radius)/2,
+            spring = 0.1;
+
+        if (distance < min) {
+            float angle = atan2(dy, dx),
+                targetX = location.x + cos(angle) * min,
+                targetY = location.y + sin(angle) * min,
+                ax = (targetX - o.location.x) * spring,
+                ay = (targetY - o.location.y) * spring;
+            o.velocity.x += ax;
+            o.velocity.y += ay;
+        }
     }
     
     void shoot(float force) {
@@ -216,13 +238,38 @@ class Body {
         this.applyFriction();
         this.applyGravity();
         this.applyCharge(center);
+        
+        if (location.x < 0 || location.x > width)
+            velocity.x = -velocity.x;
+        if (location.y < 0 || location.y > height)
+            velocity.y = -velocity.y;
+        
         velocity.add(acceleration);
         location.add(velocity);
-        acceleration.mult(0);
+        acceleration.mult(0.01);
+    }
+    
+    void deflect (Body o) {
+        float dx = o.location.x - location.x,
+            dy = o.location.y - location.y,
+            distance = sqrt(dx*dx + dy*dy),
+            min = (float) (o.radius + radius)/2,
+            spring = 0.01;
+        if (distance < min) {
+            float angle = atan2(dy, dx),
+                targetX = location.x + cos(angle) * min,
+                targetY = location.y + sin(angle) * min,
+                ax = (targetX - o.location.x) * spring,
+                ay = (targetY - o.location.y) * spring;
+            velocity.x -= ax;
+            velocity.y -= ay;
+            o.velocity.x += ax;
+            o.velocity.y += ay;
+        }
     }
 
-    void applyForceFrom (Body o) {
-        this.applyCharge(o);
+    void applyForceTo (Body o) {
+        this.deflect(o);
         //this.applySpring(o);
     }
 
