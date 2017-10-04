@@ -138,7 +138,7 @@ class Puck extends Body {
     Puck (float mass, float charge, PVector location) {
         super(mass, charge, location);
         ground = location.copy();
-        this.radius = 30;
+        this.radius = 45;
     }
     
     void render () {
