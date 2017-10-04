@@ -182,7 +182,7 @@ class Puck extends Body {
             dy = o.location.y - location.y,
             distance = sqrt(dx*dx + dy*dy),
             min = (float) (o.radius + radius)/2,
-            spring = 0.1;
+            spring = 0.3;
 
         if (distance < min) {
             float angle = atan2(dy, dx),
