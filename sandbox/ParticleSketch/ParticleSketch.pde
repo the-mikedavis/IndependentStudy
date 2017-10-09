@@ -1,34 +1,37 @@
 import java.util.Iterator;
-ParticleSystem ps;
+ConfettiSystem ps;
 
 void setup() {
-    size(640,360);
-    ps = new ParticleSystem(new PVector(width / 2, 30));
+    size(640,360,P3D);
+    ps = new ConfettiSystem(new PVector(width / 2, 30));
 }
 
 void draw() {
     background(255);
-    ps.addParticle();
+    ps.addConfetto();
     ps.run();
 }
 
-class ParticleSystem {
-    ArrayList<Particle> particles;
+class ConfettiSystem {
+    ArrayList<Confetto> particles;
     PVector origin;
+    color[] colors = new color[]{color(255,80,80), color(255,255,0), color(51,204,255)};
 
-    ParticleSystem(PVector location) {
-        origin = location.get();
-        particles = new ArrayList<Particle>();
+    ConfettiSystem(PVector location) {
+        origin = location.copy();
+        particles = new ArrayList<Confetto>();
     }
 
-    void addParticle() {
-        particles.add(new Particle(origin));
+    void addConfetto() {
+        particles.add(new Confetto(origin));
+        //particles.add(new Confetto(origin, colors[(int) random(0,3)]));
     }
 
     void run() {
-        Iterator<Particle> it = particles.iterator();
+        noStroke();
+        Iterator<Confetto> it = particles.iterator();
         while (it.hasNext()) {
-            Particle p = it.next();
+            Confetto p = it.next();
             p.run();
             if (p.isDead())
                 it.remove();
@@ -36,19 +39,26 @@ class ParticleSystem {
     }
 }
 
-class Particle {
+class Confetto {
     PVector location;
     PVector velocity;
     PVector acceleration;
     float lifespan;
     color c;
+    int z;
     
-    Particle(PVector l) {
-        location = l.get();
+    Confetto(PVector l) {
+        z = (int) random(-50,50);
+        location = l.copy();
         velocity = new PVector(random(-1, 1), random(-2, 0));
         acceleration = new PVector(0, 0.05);
-        lifespan = 255;
-        c = color(round(random(255)), round(random(255)), round(random(255)));
+        lifespan = 355;
+        c = color(round(random(50,255)), round(random(50,255)), round(random(50,255)));
+    }
+    
+    Confetto(PVector l, color c) {
+        this(l);
+        this.c = c;
     }
     
     void update() {
@@ -58,9 +68,11 @@ class Particle {
     }
     
     void display() {
-        stroke(0, lifespan);
-        fill(c, lifespan);
-        rect(location.x, location.y, 10, 10);
+        pushMatrix();
+        translate(location.x, location.y, z);
+        fill(c);
+        rect(0, 0, 10, 10);
+        popMatrix();
     }
     
     void run() {
