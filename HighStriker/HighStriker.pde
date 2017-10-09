@@ -14,7 +14,7 @@ int root;
 
 Ball ball;
 Bell bell;
-ParticleSystem conf;
+ConfettiSystem conf;
 //BirdSystem birds;
 int particleCount = 0;
 
@@ -41,7 +41,7 @@ void setup() {
     
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
-    conf = new ParticleSystem(new PVector(width / 2, height / 8));
+    conf = new ConfettiSystem(new PVector(width / 2, height / 8));
     //birds = new BirdSystem(2);
     ring = new SoundFile(this, "ring.mp3");
 }
@@ -77,7 +77,7 @@ void draw() {
         ball.shoot(average - thresh * limit);
     
     if (particleCount > 0) {
-        conf.addParticle();
+        conf.addConfetto();
         particleCount--;
     }
     
@@ -90,6 +90,8 @@ void draw() {
 void keyPressed() {
     if (key == ' ')
         render = !render;
+    else if (key == '\n')
+        conf.fire();
     else if (key == 'i' || key == 'I')
         thresh++;
     else if (key == 'd' || key == 'D')
@@ -235,25 +237,31 @@ class Bell {
     }
 }
 
-class ParticleSystem {
-    ArrayList<Particle> particles;
+class ConfettiSystem {
+    ArrayList<Confetto> particles;
     PVector origin;
-    color[] colors = new color[]{color(255,80,80),color(255,255,0),color(51,204,255)};
+    color[] colors = new color[]{color(255,80,80), color(255,255,0), color(51,204,255)};
 
-    ParticleSystem(PVector location) {
+    ConfettiSystem(PVector location) {
         origin = location.copy();
-        particles = new ArrayList<Particle>();
+        particles = new ArrayList<Confetto>();
     }
 
-    void addParticle() {
-        color c = colors[(int) random(0, 3)];
-        particles.add(new Particle(origin, c));
+    void addConfetto() {
+        particles.add(new Confetto(origin));
+        //particles.add(new Confetto(origin, colors[(int) random(0,3)]));
     }
 
+    void fire () {
+        for (int i = 0; i < 30; i++)
+            this.addConfetto();
+    }
+    
     void run() {
-        Iterator<Particle> it = particles.iterator();
+        noStroke();
+        Iterator<Confetto> it = particles.iterator();
         while (it.hasNext()) {
-            Particle p = it.next();
+            Confetto p = it.next();
             p.run();
             if (p.isDead())
                 it.remove();
@@ -261,32 +269,49 @@ class ParticleSystem {
     }
 }
 
-class Particle {
+class Confetto {
     PVector location;
     PVector velocity;
     PVector acceleration;
     float lifespan;
     color c;
+    int z;
+    float xangle, zangle;
     
-    Particle(PVector l, color c) {
+    Confetto(PVector l) {
+        z = (int) random(-50,50);
+        xangle = random(0, 2 * PI);
+        zangle = random(0, 2 * PI);
         location = l.copy();
         velocity = new PVector(random(-1, 1), random(-2, 0));
         acceleration = new PVector(0, 0.05);
-        lifespan = 255;
+        lifespan = 355;
+        c = color(round(random(50,255)), round(random(50,255)), round(random(50,255)));
+    }
+    
+    Confetto(PVector l, color c) {
+        this(l);
         this.c = c;
     }
     
     void update() {
         velocity.add(acceleration);
         location.add(velocity);
-        lifespan -= 1.0;
+        lifespan -= 0.5;
+        if (location.y > 7*height/8) {
+            acceleration = new PVector(0, 0);
+            velocity.mult(0.1);
+        }
     }
     
     void display() {
-        stroke(0, lifespan);
-        strokeWeight(0);
-        fill(c, lifespan);
-        rect(location.x, location.y, 10, 10);
+        pushMatrix();
+        translate(location.x, location.y, z);
+        rotateX(xangle);
+        rotateZ(zangle);
+        fill(c);
+        rect(0, 0, 10, 10);
+        popMatrix();
     }
     
     void run() {
