@@ -130,13 +130,16 @@ class Spline {    //combination of path generator & linked list (queue style)
         strokeWeight(1);
         beginShape();
         int i = 0;
-        for (Node e = root; e != null; e = e.next) {
-            int x = i * width / this.limit;
-            if (e.equals(root) || e.next == null) //draw the first and last point twice.
-                e.draw(x);
+        Node e = root;
+        int x  = 0;
+        e.draw(0);
+        for (e = root; e.next != null; e = e.next) {
+            x = i * width / this.limit;
             e.draw(x);
             i++;
         }
+        e.draw(x);
+        e.draw(x);
         endShape();
     }
     
