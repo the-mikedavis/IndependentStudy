@@ -170,7 +170,8 @@ class Spline {    //combination of path generator & linked list (queue style)
 class Ball {
 
     PVector location, velocity, acceleration, ground;
-    boolean shot = false;
+    boolean shot = false,
+        topped = false;
     
     Ball (PVector location) {
         this.location = location;
@@ -195,6 +196,7 @@ class Ball {
     
     void reset() {
         shot = false;
+        topped = false;
         location = ground.copy();
         velocity = new PVector(0, 0);
         acceleration = new PVector(0,0);
@@ -207,6 +209,16 @@ class Ball {
     void update() {
         velocity.add(acceleration);
         location.add(velocity);
+        //    event that the ball has reached the top of its firing arc without
+        //    actually hitting the bell
+        if (round(velocity.y) == 0 && location.y < 7 * height / 8 && !topped)
+            react(location.y);
+    }
+    
+    void react(float y) {
+        topped = true;
+        System.out.println("Topped out");
+        System.out.println(y);
     }
     
     void applyGravity(PVector gravity) {
@@ -229,7 +241,6 @@ class Bell {
     void ring () {
         ring.play();
         particleCount += 150;
-        System.out.println("Ring!");
     }
     
     void draw() {
