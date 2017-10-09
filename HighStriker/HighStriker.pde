@@ -253,7 +253,7 @@ class ConfettiSystem {
     }
 
     void fire () {
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 50; i++)
             this.addConfetto();
     }
     
@@ -285,7 +285,7 @@ class Confetto {
         location = l.copy();
         velocity = new PVector(random(-1, 1), random(-2, 0));
         acceleration = new PVector(0, 0.05);
-        lifespan = 355;
+        lifespan = (int) random(300, 400);
         c = color(round(random(50,255)), round(random(50,255)), round(random(50,255)));
     }
     

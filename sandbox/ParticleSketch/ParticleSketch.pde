@@ -68,8 +68,10 @@ class Confetto {
         velocity.add(acceleration);
         location.add(velocity);
         lifespan -= 0.5;
-        if (location.y > 3*height/4)
+        if (location.y > 3*height/4) {
+            acceleration = new PVector(0, 0);
             velocity.mult(0.1);
+        }
     }
     
     void display() {
