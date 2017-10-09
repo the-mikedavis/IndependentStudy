@@ -19,7 +19,7 @@ ConfettiSystem conf;
 int particleCount = 0;
 
 SoundFile ring;
-SoundFile[] pops;
+SoundFile pop;
 
 void setup() {
     size(540, 960, P3D);
@@ -45,11 +45,11 @@ void setup() {
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
     //birds = new BirdSystem(2);
     ring = new SoundFile(this, "ring.mp3");
-    pops = new SoundFile[4];
-    for (int i = 0; i < pops.length; i++) {
-        pops[i] = new SoundFile(this, "pop" + i + ".mp3");
-        println(pops[i].duration());
-    }
+    pop = new SoundFile(this, "pop.mp3");
+    //for (int i = 0; i < pops.length; i++) {
+    //    pops[i] = new SoundFile(this, "pop" + i + ".mp3");
+    //    println(pops[i].duration());
+    //}
 }
 
 void draw() {
@@ -245,7 +245,7 @@ class Ball {
     void react(int stage) {
         System.out.println("Manually triggered stage " + stage);
         conf.fire(2 * stage * 10 + 5);
-        pops[stage].play(); 
+        pop.play(); 
         //play sound here
     }
     
@@ -268,6 +268,7 @@ class Bell {
 
     void ring () {
         ring.play();
+        pop.play();
         conf.fire(100);
         particleCount += 150;
     }
