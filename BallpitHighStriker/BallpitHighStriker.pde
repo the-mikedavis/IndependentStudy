@@ -39,6 +39,7 @@ void setup () {
     root = 7 * height / 8;
     
     launchConstant = (float) height / 240;
+    println(sin(-2.78));
 }
 
 void draw () {

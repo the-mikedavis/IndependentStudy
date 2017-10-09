@@ -15,16 +15,13 @@ int root;
 Ball ball;
 Bell bell;
 ParticleSystem conf;
-BirdSystem birds;
+//BirdSystem birds;
 int particleCount = 0;
 
-PImage img;
 SoundFile ring;
 
 void setup() {
-    size(540, 960);
-    
-    img = loadImage("data/drawinghalf.jpg");
+    size(540, 960, P3D);
     
     in = new AudioIn(this, 0);
     in.start();
@@ -45,12 +42,11 @@ void setup() {
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
     conf = new ParticleSystem(new PVector(width / 2, height / 8));
-    birds = new BirdSystem(2);
+    //birds = new BirdSystem(2);
     ring = new SoundFile(this, "ring.mp3");
 }
 
 void draw() {
-    //background(img);
     background(255);
     
     fft.analyze();
@@ -87,7 +83,7 @@ void draw() {
     
     conf.run();
     ball.run();
-    birds.run();
+    //birds.run();
     bell.draw();
 }
 
@@ -242,14 +238,16 @@ class Bell {
 class ParticleSystem {
     ArrayList<Particle> particles;
     PVector origin;
+    color[] colors = new color[]{color(255,80,80),color(255,255,0),color(51,204,255)};
 
     ParticleSystem(PVector location) {
-        origin = location.get();
+        origin = location.copy();
         particles = new ArrayList<Particle>();
     }
 
     void addParticle() {
-        particles.add(new Particle(origin));
+        color c = colors[(int) random(0, 3)];
+        particles.add(new Particle(origin, c));
     }
 
     void run() {
@@ -270,12 +268,12 @@ class Particle {
     float lifespan;
     color c;
     
-    Particle(PVector l) {
-        location = l.get();
+    Particle(PVector l, color c) {
+        location = l.copy();
         velocity = new PVector(random(-1, 1), random(-2, 0));
         acceleration = new PVector(0, 0.05);
         lifespan = 255;
-        c = color(round(random(255)), round(random(255)), round(random(255)));
+        this.c = c;
     }
     
     void update() {
