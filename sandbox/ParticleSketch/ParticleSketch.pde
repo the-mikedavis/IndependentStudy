@@ -3,7 +3,7 @@ ConfettiSystem ps;
 
 void setup() {
     size(640,360,P3D);
-    ps = new ConfettiSystem(new PVector(width / 2, 30));
+    ps = new ConfettiSystem(new PVector(width / 2, height/4));
 }
 
 void draw() {
@@ -46,9 +46,12 @@ class Confetto {
     float lifespan;
     color c;
     int z;
+    float xangle, zangle;
     
     Confetto(PVector l) {
         z = (int) random(-50,50);
+        xangle = random(0, 2 * PI);
+        zangle = random(0, 2 * PI);
         location = l.copy();
         velocity = new PVector(random(-1, 1), random(-2, 0));
         acceleration = new PVector(0, 0.05);
@@ -64,12 +67,16 @@ class Confetto {
     void update() {
         velocity.add(acceleration);
         location.add(velocity);
-        lifespan -= 2.0;
+        lifespan -= 0.5;
+        if (location.y > 3*height/4)
+            velocity.mult(0.1);
     }
     
     void display() {
         pushMatrix();
         translate(location.x, location.y, z);
+        rotateX(xangle);
+        rotateZ(zangle);
         fill(c);
         rect(0, 0, 10, 10);
         popMatrix();
