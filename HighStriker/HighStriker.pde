@@ -217,8 +217,14 @@ class Ball {
     
     void react(float y) {
         topped = true;
+        int nostages = 4;
         System.out.println("Topped out");
         System.out.println(y);
+        
+        //    create some effects without branching (decreases perf.)
+        int stage = floor(((7 * height / 8) - y) / (3 * height / 4) * nostages);
+        System.out.println(stage);
+        conf.fire(2 * stage * 10 + 5);
     }
     
     void applyGravity(PVector gravity) {
@@ -240,6 +246,7 @@ class Bell {
 
     void ring () {
         ring.play();
+        conf.fire(100);
         particleCount += 150;
     }
     
