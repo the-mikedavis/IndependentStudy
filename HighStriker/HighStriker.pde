@@ -19,6 +19,7 @@ ConfettiSystem conf;
 int particleCount = 0;
 
 SoundFile ring;
+SoundFile[] pops;
 
 void setup() {
     size(540, 960, P3D);
@@ -44,6 +45,11 @@ void setup() {
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
     //birds = new BirdSystem(2);
     ring = new SoundFile(this, "ring.mp3");
+    pops = new SoundFile[4];
+    for (int i = 0; i < pops.length; i++) {
+        pops[i] = new SoundFile(this, "pop" + i + ".mp3");
+        println(pops[i].duration());
+    }
 }
 
 void draw() {
@@ -92,6 +98,14 @@ void keyPressed() {
         render = !render;
     else if (key == '\n')
         conf.fire();
+    else if (key == '0')
+        ball.react(0);
+    else if (key == '1')
+        ball.react(1);
+    else if (key == '2')
+        ball.react(2);
+    else if (key == '3')
+        ball.react(3);
     else if (key == 'i' || key == 'I')
         thresh++;
     else if (key == 'd' || key == 'D')
@@ -221,10 +235,18 @@ class Ball {
         System.out.println("Topped out");
         System.out.println(y);
         
-        //    create some effects without branching (decreases perf.)
+        //    create some effects without branching (which decreases perf.)
         int stage = floor(((7 * height / 8) - y) / (3 * height / 4) * nostages);
-        System.out.println(stage);
+        react(stage);
+        //TODO: find party sounds and boom sounds (fireworks), put them
+        //into an array, and play at the index marked by stage.
+    }
+    
+    void react(int stage) {
+        System.out.println("Manually triggered stage " + stage);
         conf.fire(2 * stage * 10 + 5);
+        pops[stage].play(); 
+        //play sound here
     }
     
     void applyGravity(PVector gravity) {
