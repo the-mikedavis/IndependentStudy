@@ -271,6 +271,11 @@ class ConfettiSystem {
             this.addConfetto();
     }
     
+    void fire (int count) {
+        for (int i = 0; i < count; i++)
+            this.addConfetto();
+    }
+    
     void run() {
         noStroke();
         Iterator<Confetto> it = particles.iterator();
