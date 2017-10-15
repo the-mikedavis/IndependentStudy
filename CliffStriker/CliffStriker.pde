@@ -76,9 +76,8 @@ void draw() {
     }
     
     // Trigger statement
-    //  TODO change to character action
     if (average > limit * thresh)
-        ball.shoot(average - thresh * limit);
+        ch.drop(average - thresh * limit);
     
     if (particleCount > 0) {
         conf.addConfetto();
@@ -279,6 +278,7 @@ class Ball {
         if (shot)
             return;
         velocity = new PVector(0, (float) (-launchConstant * Math.log(force)));
+        println(velocity.y);
         applyGravity(new PVector(0, 0.3));
         shot = true;
     }
@@ -396,9 +396,51 @@ class Confetto {
 }
 
 class Character extends Ball {
-    
+
+    boolean dropping, anim;
+    float mag;
+    PVector flr;
+
     Character (PVector location) {
         super(location);
+        dropping = false;
+        anim = false;
+        flr = new PVector(width / 2, 7 * height / 8);
     }
 
+    void run () {
+        update();
+        stroke(0);
+        strokeWeight(1);
+        fill(225);
+        ellipse(location.x, location.y, 20, 20);
+    }
+
+    void drop(float mag) {
+        if (dropping || anim)
+            return;
+        println("dropping");
+        this.mag = mag;
+        dropping = true;
+        applyGravity(new PVector(0, 0.3));
+    }
+
+    void update() {
+        velocity.add(acceleration);
+        location.add(velocity);
+
+        if (round(location.y) > 7 * height / 8) {
+            velocity.mult(0);
+            acceleration.mult(0);
+            dropping = false;
+            location = flr.copy();
+            anim = true;
+            this.react();
+        }
+    }
+
+    void react () {
+        println("shooting");
+        ball.shoot(this.mag);
+    }
 }
