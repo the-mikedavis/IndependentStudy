@@ -16,6 +16,7 @@ Ball ball;
 Bell bell;
 Character ch;
 ConfettiSystem conf;
+WindSystem wind;
 int particleCount = 0;
 
 SoundFile ring;
@@ -46,6 +47,7 @@ void setup() {
     ring = new SoundFile(this, "ring.mp3");
     pop = new SoundFile(this, "pop.mp3");
     ch = new Character(new PVector(width / 2, 5 * height / 8 - 10));
+    wind = new WindSystem();
 }
 
 void draw() {
@@ -88,6 +90,7 @@ void draw() {
     ball.run();
     ch.run();
     bell.draw();
+    wind.update();
 }
 
 void keyPressed() {
@@ -119,16 +122,8 @@ void drawbackground() {
     stroke(0);
     line(3*width/8, 5*height/8, 5*width/8, 5*height/8);
 
-    /*
-    int r = width / 8;
-    ellipse(width / 2, 7 * height / 8, r, r / 2);
-    r *= 1.5;
-    ellipse(width / 2, 7 * height / 8, r, r / 2);
-    r *= 1.5;
-    ellipse(width / 2, 7 * height / 8, r, r / 2);
-    */
     pushMatrix();
-    translate(width / 2, 7 * height / 8);
+    translate(width / 2, 15 * height / 16);
     rotateX(PI / 2.2);
     ellipse(0, 0, width / 5, width / 5);
     ellipse(0, 0, width / 7, width / 7);
@@ -236,6 +231,7 @@ class Ball {
         location = ground.copy();
         velocity = new PVector(0, 0);
         acceleration = new PVector(0,0);
+        ch.reset();
     }
 
     void reflect() {
@@ -278,7 +274,6 @@ class Ball {
         if (shot)
             return;
         velocity = new PVector(0, (float) (-launchConstant * Math.log(force)));
-        println(velocity.y);
         applyGravity(new PVector(0, 0.3));
         shot = true;
     }
@@ -369,7 +364,7 @@ class Confetto {
         velocity.add(acceleration);
         location.add(velocity);
         lifespan -= 0.5;
-        if (location.y > 7*height/8) {
+        if (location.y > 15*height/16) {
             acceleration = new PVector(0, 0);
             velocity.mult(0.1);
         }
@@ -405,7 +400,7 @@ class Character extends Ball {
         super(location);
         dropping = false;
         anim = false;
-        flr = new PVector(width / 2, 7 * height / 8);
+        flr = new PVector(width / 2, 15 * height / 16);
     }
 
     void run () {
@@ -426,14 +421,16 @@ class Character extends Ball {
     }
 
     void update() {
+        if (dropping)
+            wind.gust(velocity);
         velocity.add(acceleration);
         location.add(velocity);
 
-        if (round(location.y) > 7 * height / 8) {
+        if (location.y > flr.y) {
             velocity.mult(0);
             acceleration.mult(0);
             dropping = false;
-            location = flr.copy();
+            location.y = flr.y;
             anim = true;
             this.react();
         }
@@ -443,4 +440,39 @@ class Character extends Ball {
         println("shooting");
         ball.shoot(this.mag);
     }
+
+    void reset () {
+        location = ground.copy();
+        dropping = false;
+        anim = false;
+        velocity.mult(0);
+        acceleration.mult(0);
+    }
+
+}
+
+class WindSystem {
+
+    int frames;
+    float wind;
+    
+    WindSystem() {
+        frames = 0;
+        wind = 0.01;
+    }
+
+    void update() {
+        if (--frames <= 0) {
+            frames = (int) random(60, 360);
+            wind = (float) (Math.random() / 10);
+            if (Math.random() < 0.5)
+                wind = -wind;
+        }
+    }
+
+    void gust (PVector o) {
+        o.x += wind;
+    }
+
+    //TODO add draw method for visual wind feedback
 }
