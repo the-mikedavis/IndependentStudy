@@ -422,7 +422,7 @@ class Character extends Ball {
 
     void update() {
         if (dropping)
-            wind.gust(velocity);
+            wind.gust(velocity, mag);
         velocity.add(acceleration);
         location.add(velocity);
 
@@ -464,7 +464,7 @@ class WindSystem {
     void update() {
         if (--frames <= 0) {
             frames = (int) random(60, 360);
-            wind = (float) (Math.random() / 10);
+            wind = (float) Math.random();
             if (Math.random() < 0.5)
                 wind = -wind;
         }
@@ -472,6 +472,10 @@ class WindSystem {
 
     void gust (PVector o) {
         o.x += wind;
+    }
+
+    void gust (PVector o, float dampening) {
+        o.x += wind / dampening;
     }
 
     //TODO add draw method for visual wind feedback
