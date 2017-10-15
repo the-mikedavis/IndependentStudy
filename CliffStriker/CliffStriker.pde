@@ -14,6 +14,7 @@ int root;
 
 Ball ball;
 Bell bell;
+Character ch;
 ConfettiSystem conf;
 int particleCount = 0;
 
@@ -42,9 +43,9 @@ void setup() {
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
-    //birds = new BirdSystem(2);
     ring = new SoundFile(this, "ring.mp3");
     pop = new SoundFile(this, "pop.mp3");
+    ch = new Character(new PVector(width / 2, 5 * height / 8 - 10));
 }
 
 void draw() {
@@ -75,6 +76,7 @@ void draw() {
     }
     
     // Trigger statement
+    //  TODO change to character action
     if (average > limit * thresh)
         ball.shoot(average - thresh * limit);
     
@@ -85,6 +87,7 @@ void draw() {
     
     conf.run();
     ball.run();
+    ch.run();
     bell.draw();
 }
 
@@ -263,7 +266,6 @@ class Ball {
     }
     
     void react(int stage) {
-        System.out.println("Manually triggered stage " + stage);
         conf.fire(2 * stage * 10 + 5);
         //pop.play(); 
         //play sound here
@@ -391,4 +393,12 @@ class Confetto {
     boolean isDead() {
         return lifespan < 0.0;   
     }
+}
+
+class Character extends Ball {
+    
+    Character (PVector location) {
+        super(location);
+    }
+
 }
