@@ -129,6 +129,18 @@ void drawbackground() {
     ellipse(0, 0, width / 7, width / 7);
     ellipse(0, 0, width / 11, width / 11);
     popMatrix();
+
+    wind.draw();
+}
+
+void arrow(float x1, float y1, float x2, float y2) {
+    float a = 2 * dist(x1, y1, x2, y2) / 50;
+    pushMatrix();
+    translate(x2, y2);
+    rotate(atan2(y2 - y1, x2 - x1));
+    triangle(- a * 2 , - a, 0, 0, - a * 2, a);
+    popMatrix();
+    line(x1, y1, x2, y2);  
 }
 
 class Spline {    //combination of path generator & linked list (queue style)
@@ -478,5 +490,13 @@ class WindSystem {
         o.x += wind / dampening;
     }
 
-    //TODO add draw method for visual wind feedback
+    void draw () {
+        stroke(0);
+        line(width / 4, 5 * height / 8, width / 4, height / 2);
+        if (wind < 0)
+            arrow(width / 8, height / 2, 3 * width / 8, height / 2);
+        else
+            arrow(3 * width / 8, height / 2, width / 8, height / 2);
+    }
+
 }
