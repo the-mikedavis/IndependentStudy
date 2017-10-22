@@ -19,10 +19,10 @@ Puck puck;
 
 void setup () {
     size(540, 960);
-    system = new FDGraph(150);   
+    system = new FDGraph(250);   
     center = new Body(10f, 10f, new PVector(width / 2, height / 4));
     
-    puck = new Puck(0f, 0f, new PVector(width / 2, 7 * height / 8));
+    puck = new Puck(0f, 0f, new PVector(width / 2, height / 2));
     
     in = new AudioIn(this, 0);
     in.start();
@@ -39,7 +39,6 @@ void setup () {
     root = 7 * height / 8;
     
     launchConstant = (float) height / 240;
-    println(sin(-2.78));
 }
 
 void draw () {
@@ -183,7 +182,7 @@ class Puck extends Body {
             dy = o.location.y - location.y,
             distance = sqrt(dx*dx + dy*dy),
             min = (float) (o.radius + radius)/2,
-            spring = 0.3;
+            spring = 0.1;
 
         if (distance < min) {
             float angle = atan2(dy, dx),
@@ -237,8 +236,8 @@ class Body {
 
     void update () {
         this.applyFriction();
-        this.applyGravity();
-        this.applyCharge(center);
+        //this.applyGravity();
+        //this.applyCharge(center);
         
         if (location.x < 0 || location.x > width)
             velocity.x = -velocity.x;
@@ -287,7 +286,9 @@ class Body {
     }
 
     void applyFriction () {
-        float c = 0.01;
+        float c = 0.03;
+        float speed = velocity.mag();
+        float dragMagnitude = c * speed * speed;
         PVector force = velocity.copy();
         force.mult(-1);
         force.normalize();
