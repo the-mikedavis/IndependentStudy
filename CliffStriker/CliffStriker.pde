@@ -5,12 +5,15 @@ FFT fft;
 AudioIn in;
 Spline threshSpline, totalSpline, triggerSpline, baseLine;
 int bands = 32;
-float scale = 2000.0, smoothing = 0.001;
+float dampen = 0f;
+float scale = 2000f, smoothing = 0.001;
 float total, average, thresh;
 boolean render = false;
-float limit = 15.0;
-float launchConstant = 4.0;
+float limit = 15f;
+float launchConstant = 4f;
 int root;
+int Y_AXIS = 1;
+int X_AXIS = 2;
 
 Character ch;
 ConfettiSystem conf;
@@ -47,13 +50,12 @@ void setup() {
 }
 
 void draw() {
-    background(255);
     drawbackground();
     
     fft.analyze();
     total = 0;
     for (int i = 0; i < bands; i++)
-        total += fft.spectrum[i] * scale;
+        total += fft.spectrum[i] * scale * (1 - dampen);
     average = total / bands;
     thresh += (average - thresh) * smoothing;
     
@@ -101,6 +103,13 @@ void keyPressed() {
 }
 
 void drawbackground() {
+    /*/  draw the sky gradient
+    color bright = color(240,248,255);
+    color sky = color(135, 206, 250);
+    color space = color(22, 22, 22);
+    setGradient(0, - height / 2, width, height, space, sky, Y_AXIS);
+    */
+    background(255);
     noFill();
     stroke(204, 102, 0);
     rect(0, 5*height/8, 3*width/8, 3*height/8);
@@ -458,10 +467,12 @@ class WindSystem {
 
     int frames;
     float wind;
+    Vane vane;
     
     WindSystem() {
         frames = 0;
         wind = 0.01;
+        vane = new Vane(new PVector (width / 4, height / 2));
     }
 
     void update() {
@@ -470,6 +481,7 @@ class WindSystem {
             wind = (float) Math.random();
             if (Math.random() < 0.5)
                 wind = -wind;
+            vane.setWind(wind, frames);
         }
     }
 
@@ -482,12 +494,68 @@ class WindSystem {
     }
 
     void draw () {
-        stroke(0);
-        line(width / 4, 5 * height / 8, width / 4, height / 2);
-        if (wind < 0)
-            arrow(width / 8, height / 2, 3 * width / 8, height / 2);
-        else
-            arrow(3 * width / 8, height / 2, width / 8, height / 2);
+        vane.update();
+        vane.draw();
     }
 
+    class Vane {
+
+        PVector location, direction;
+        int frames, sign, initFrames;
+        int boundaryFrames = 20;
+
+        Vane(PVector location) {
+            this.location = location;
+            direction = new PVector(0,0);
+        }
+
+        void setWind (float mag, int frames) {
+            this.sign = mag < 0 ? -1 : 1;
+            direction = new PVector(0, sign * mag);
+            direction.normalize();
+            direction.mult(width / 8);
+            this.frames = frames;
+            initFrames = boundaryFrames;
+        }
+
+        void draw () {
+            //  draw the post
+            line(location.x, 5 * height / 8, location.x, location.y);
+            //  draw the vane
+            arrow(location.x, location.y, 
+                location.x + direction.x, 
+                location.y + direction.y);
+        }
+        
+        void update() {
+            if (--frames <= boundaryFrames)
+                direction.rotate(sign * HALF_PI / boundaryFrames);
+            if (--initFrames >= 0)
+                direction.rotate(- sign * HALF_PI / boundaryFrames);
+        }
+            
+    }
+
+}
+
+void setGradient(int x, int y, float w, float h, color c1, color c2, int axis ) {
+
+    noFill();
+
+    if (axis == Y_AXIS) {  // Top to bottom gradient
+        for (int i = y; i <= y+h; i++) {
+            float inter = map(i, y, y+h, 0, 1);
+            color c = lerpColor(c1, c2, inter);
+            stroke(c);
+            line(x, i, x+w, i);
+        }
+    }  
+    else if (axis == X_AXIS) {  // Left to right gradient
+        for (int i = x; i <= x+w; i++) {
+            float inter = map(i, x, x+w, 0, 1);
+            color c = lerpColor(c1, c2, inter);
+            stroke(c);
+            line(i, y, i, y+h);
+        }
+    }
 }
