@@ -12,8 +12,6 @@ float limit = 15.0;
 float launchConstant = 4.0;
 int root;
 
-Ball ball;
-Bell bell;
 Character ch;
 ConfettiSystem conf;
 WindSystem wind;
@@ -41,8 +39,6 @@ void setup() {
     
     launchConstant = (float) height / 240;
     
-    ball = new Ball(new PVector(width / 2, 7 * height / 8));
-    bell = new Bell();
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
     ring = new SoundFile(this, "ring.mp3");
     pop = new SoundFile(this, "pop.mp3");
@@ -87,9 +83,7 @@ void draw() {
     }
     
     conf.run();
-    ball.run();
     ch.run();
-    bell.draw();
     wind.update();
 }
 
@@ -98,14 +92,6 @@ void keyPressed() {
         render = !render;
     else if (key == '\n')
         conf.fire();
-    else if (key == '0')
-        ball.react(0);
-    else if (key == '1')
-        ball.react(1);
-    else if (key == '2')
-        ball.react(2);
-    else if (key == '3')
-        ball.react(3);
     else if (key == 'i' || key == 'I')
         thresh++;
     else if (key == 'd' || key == 'D')
@@ -233,7 +219,7 @@ class Ball {
             reset();
         if (location.y < height / 8) {
             reflect();
-            bell.ring();
+            //bell.ring();
         }
     }
     
@@ -283,8 +269,6 @@ class Ball {
     }
     
     void shoot(float force) {
-        if (shot)
-            return;
         velocity = new PVector(0, (float) (-launchConstant * Math.log(force)));
         applyGravity(new PVector(0, 0.3));
         shot = true;
@@ -405,6 +389,7 @@ class Confetto {
 class Character extends Ball {
 
     boolean dropping, anim;
+    int bounceCount;
     float mag;
     PVector flr;
 
@@ -413,6 +398,7 @@ class Character extends Ball {
         dropping = false;
         anim = false;
         flr = new PVector(width / 2, 15 * height / 16);
+        bounceCount = 0;
     }
 
     void run () {
@@ -435,6 +421,7 @@ class Character extends Ball {
     void update() {
         if (dropping)
             wind.gust(velocity, mag);
+
         velocity.add(acceleration);
         location.add(velocity);
 
@@ -444,16 +431,20 @@ class Character extends Ball {
             dropping = false;
             location.y = flr.y;
             anim = true;
-            this.react();
+            this.react(bounceCount++);
         }
+
+        if (bounceCount > 3)
+            reset();
     }
 
-    void react () {
-        println("shooting");
-        ball.shoot(this.mag);
+    void react (int time) {
+        println("shooting, time = " + time);
+        shoot(this.mag * (1 - .3 * time));
     }
 
     void reset () {
+        bounceCount = 0;
         location = ground.copy();
         dropping = false;
         anim = false;
