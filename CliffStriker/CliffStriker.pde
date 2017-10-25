@@ -49,7 +49,7 @@ void setup() {
     pop = new SoundFile(this, "pop.mp3");
     ch = new Character(new PVector(width / 2, 7 * height / 16 + 5));
     wind = new WindSystem();
-    cliff = loadImage("cliff.png");
+    cliff = loadImage("cliff.jpg");
     cliff.resize(width, height);
 }
 
@@ -264,8 +264,6 @@ class Ball {
     void react(float y) {
         topped = true;
         int nostages = 4;
-        System.out.println("Topped out");
-        System.out.println(y);
         
         //    create some effects without branching (which decreases perf.)
         int stage = floor(((7 * height / 8) - y) / (3 * height / 4) * nostages);
@@ -428,7 +426,6 @@ class Character extends Ball {
     void drop(float mag) {
         if (dropping || anim)
             return;
-        println("dropping");
         this.mag = mag;
         dropping = true;
         applyGravity(new PVector(0, 0.3));
@@ -455,7 +452,6 @@ class Character extends Ball {
     }
 
     void react (int time) {
-        println("shooting, time = " + time);
         shoot(this.mag * (1 - .3 * time));
     }
 
