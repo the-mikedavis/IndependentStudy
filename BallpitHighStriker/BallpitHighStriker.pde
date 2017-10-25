@@ -16,9 +16,21 @@ float launchConstant = 4.0;
 int root;
 
 Puck puck;
+PImage[] balls;
+PImage redball;
 
 void setup () {
     size(540, 960);
+
+    balls = new PImage[5];
+    for (int i = 0; i < balls.length; i++) {
+        balls[i] = loadImage("ball" + i + ".png");
+        balls[i].resize(51, 51);
+    }
+
+    redball = loadImage("ball5.png");
+    redball.resize(56, 56);
+
     system = new FDGraph(250);   
     center = new Body(10f, 10f, new PVector(width / 2, height / 4));
     
@@ -138,7 +150,7 @@ class Puck extends Body {
     Puck (float mass, float charge, PVector location) {
         super(mass, charge, location);
         ground = location.copy();
-        this.radius = 45;
+        this.radius = 55;
     }
     
     void render () {
@@ -146,7 +158,8 @@ class Puck extends Body {
         stroke(0);
         strokeWeight(1);
         fill(175);
-        ellipse(location.x, location.y, radius, radius);
+        //ellipse(location.x, location.y, radius, radius);
+        image(redball, location.x - radius / 2, location.y - radius / 2);
         if (location.y > ground.y)
             reset();
         if (location.y < height / 8) {
@@ -211,6 +224,7 @@ class Body {
     int radius;
     PVector location, velocity, acceleration;
     float mass, charge;
+    PImage img;
 
     Body (float mass, float charge) {
         this.radius = 50;
@@ -219,6 +233,8 @@ class Body {
         acceleration = new PVector(0, 0);
         this.mass = mass;
         this.charge = charge;
+        int i = (int) random(0, 5);
+        this.img = balls[i];
     }
     
     Body (float mass, float charge, PVector location) {
@@ -228,10 +244,12 @@ class Body {
         this.location = location;
         velocity = new PVector(0,0);
         acceleration = new PVector(0,0);
+        this.img = balls[(int) random(0,5)];
     }
 
     void render () {
-        ellipse(location.x, location.y, radius, radius);
+        //ellipse(location.x, location.y, radius, radius);
+        image(img, location.x - radius / 2, location.y - radius / 2);
     }
 
     void update () {
@@ -304,7 +322,6 @@ class Body {
         float dist = force.mag();
         //  negative because it's an attractive force.
         float m = - (G * this.mass * center.mass) / (float)Math.cbrt(dist * dist);
-        //System.out.println(m);
         force.normalize();
         force.mult(m);
         this.applyForce(force);

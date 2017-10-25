@@ -15,6 +15,8 @@ int root;
 int Y_AXIS = 1;
 int X_AXIS = 2;
 
+PImage cliff;
+PImage[] sprite;
 Character ch;
 ConfettiSystem conf;
 WindSystem wind;
@@ -45,8 +47,10 @@ void setup() {
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
     ring = new SoundFile(this, "ring.mp3");
     pop = new SoundFile(this, "pop.mp3");
-    ch = new Character(new PVector(width / 2, 5 * height / 8 - 10));
+    ch = new Character(new PVector(width / 2, 7 * height / 16 + 5));
     wind = new WindSystem();
+    cliff = loadImage("cliff.png");
+    cliff.resize(width, height);
 }
 
 void draw() {
@@ -110,6 +114,7 @@ void drawbackground() {
     setGradient(0, - height / 2, width, height, space, sky, Y_AXIS);
     */
     background(255);
+    /*
     noFill();
     stroke(204, 102, 0);
     rect(0, 5*height/8, 3*width/8, 3*height/8);
@@ -124,12 +129,14 @@ void drawbackground() {
     ellipse(0, 0, width / 7, width / 7);
     ellipse(0, 0, width / 11, width / 11);
     popMatrix();
+    */
+    image(cliff, 0, 0);
 
     wind.draw();
 }
 
 void arrow(float x1, float y1, float x2, float y2) {
-    float a = 2 * dist(x1, y1, x2, y2) / 50;
+    float a = 4 * dist(x1, y1, x2, y2) / 50;
     pushMatrix();
     translate(x2, y2);
     rotate(atan2(y2 - y1, x2 - x1));
@@ -406,7 +413,7 @@ class Character extends Ball {
         super(location);
         dropping = false;
         anim = false;
-        flr = new PVector(width / 2, 15 * height / 16);
+        flr = new PVector(width / 2, 13 * height / 16 - 3);
         bounceCount = 0;
     }
 
@@ -472,7 +479,7 @@ class WindSystem {
     WindSystem() {
         frames = 0;
         wind = 0.01;
-        vane = new Vane(new PVector (width / 4, height / 2));
+        vane = new Vane(new PVector(width / 8, 7 * height / 16 + 10));
     }
 
     void update() {
@@ -486,7 +493,7 @@ class WindSystem {
     }
 
     void gust (PVector o) {
-        o.x += wind;
+        o.x += wind / 2;
     }
 
     void gust (PVector o, float dampening) {
@@ -513,14 +520,14 @@ class WindSystem {
             this.sign = mag < 0 ? -1 : 1;
             direction = new PVector(0, sign * mag);
             direction.normalize();
-            direction.mult(width / 8);
+            direction.mult(width / 16);
             this.frames = frames;
             initFrames = boundaryFrames;
         }
 
         void draw () {
             //  draw the post
-            line(location.x, 5 * height / 8, location.x, location.y);
+            line(location.x, height / 2 - 10, location.x, location.y);
             //  draw the vane
             arrow(location.x, location.y, 
                 location.x + direction.x, 
