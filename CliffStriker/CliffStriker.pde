@@ -15,6 +15,8 @@ int root;
 int Y_AXIS = 1;
 int X_AXIS = 2;
 
+int shakeFrames = 0;
+
 PImage cliff;
 PImage[] sprite;
 Character ch;
@@ -51,6 +53,12 @@ void setup() {
     wind = new WindSystem();
     cliff = loadImage("cliff.jpg");
     cliff.resize(width, height);
+
+    sprite = new PImage[4];
+    for (int i = 0; i < sprite.length; i++) {
+        sprite[i] = loadImage("tightropeguy" + i + ".png");
+        sprite[i].resize(20, 40);
+    }
 }
 
 void draw() {
@@ -91,6 +99,14 @@ void draw() {
     conf.run();
     ch.run();
     wind.update();
+
+    if (shakeFrames > 0) {
+        shakeFrames--;
+        PImage canvas = get();
+        float shakeAmt = random(- 10, 10);
+        imageMode(CORNER);
+        image(canvas, shakeAmt / 2, shakeAmt);
+    }
 }
 
 void keyPressed() {
@@ -403,7 +419,7 @@ class Confetto {
 class Character extends Ball {
 
     boolean dropping, anim;
-    int bounceCount;
+    int bounceCount, andex, frames;
     float mag;
     PVector flr;
 
@@ -413,6 +429,8 @@ class Character extends Ball {
         anim = false;
         flr = new PVector(width / 2, 13 * height / 16 - 3);
         bounceCount = 0;
+        andex = 0;
+        frames = 15;
     }
 
     void run () {
@@ -420,7 +438,12 @@ class Character extends Ball {
         stroke(0);
         strokeWeight(1);
         fill(225);
-        ellipse(location.x, location.y, 20, 20);
+        //ellipse(location.x, location.y, 20, 20);
+        image(sprite[andex], location.x - 10, location.y - 30);
+        if (frames-- <= 0) {
+            andex = andex + 1 == 4 ? 0 : andex + 1;
+            frames = 30;
+        }
     }
 
     void drop(float mag) {
@@ -429,6 +452,7 @@ class Character extends Ball {
         this.mag = mag;
         dropping = true;
         applyGravity(new PVector(0, 0.3));
+        shakeFrames = 10;
     }
 
     void update() {
