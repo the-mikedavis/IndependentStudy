@@ -148,6 +148,8 @@ class Ball {
 
     void reflect() {
         velocity = new PVector(0, -velocity.y);
+        fan.frames = 0;
+        ball.applyGravity();
     }
     
     void update() {
@@ -178,6 +180,10 @@ class Ball {
     
     void applyGravity(PVector gravity) {
         acceleration = gravity;
+    }
+
+    void applyGravity() {
+        acceleration = new PVector(0, 0.3);
     }
     
     void shoot(float force) {
@@ -376,13 +382,11 @@ class Fan {
         this.force = force;
         //ball.velocity.add(new PVector(0, - log(force)));
         //ball.applyGravity(new PVector(0, 0.3));
-        println(force);
         //if (abs(force) < 100)
             this.frames = (int) force * 10;
     }
 
     void update () {
-        println(frames);
         if (frames-- > 0)
             ball.location.y -= 2;
         if (frames == 0)
