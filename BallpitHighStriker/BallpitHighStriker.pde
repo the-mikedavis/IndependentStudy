@@ -18,10 +18,14 @@ int root;
 Puck puck;
 PImage[] balls;
 PImage redball;
+SoundFile bounce;
 
 void setup () {
     size(540, 960);
 
+    bounce = new SoundFile(this, "ball_bounce.wav");
+    bounce.play();
+    bounce.rate(0.75);
     balls = new PImage[5];
     for (int i = 0; i < balls.length; i++) {
         balls[i] = loadImage("ball" + i + ".png");
@@ -121,14 +125,25 @@ class FDGraph {
     }
 
     void update () {
+        boolean play = false;
         for (Body a : system) {
             for (Body b : system)
                 if (!a.equals(b))
-                    a.applyForceTo(b);
+                    if (a.applyForceTo(b))
+                        play = true;
+
             //a.update();
             //a.applyForceTo(puck);
             puck.deflect(a);
         }
+
+        int frame = (int) random(5, 10);
+        if (play && (frameCount % frame) == 0) {
+            //println("play");
+            //bounce.stop();
+            bounce.play();
+        }
+
         for (Body a : system)
             a.update();
     }
@@ -190,7 +205,7 @@ class Puck extends Body {
     }
     
     @Override
-    void deflect (Body o) {
+    boolean deflect (Body o) {
         float dx = o.location.x - location.x,
             dy = o.location.y - location.y,
             distance = sqrt(dx*dx + dy*dy),
@@ -205,7 +220,9 @@ class Puck extends Body {
                 ay = (targetY - o.location.y) * spring;
             o.velocity.x += ax;
             o.velocity.y += ay;
+            return true;
         }
+        return false;
     }
     
     void shoot(float force) {
@@ -267,7 +284,7 @@ class Body {
         acceleration.mult(0.01);
     }
     
-    void deflect (Body o) {
+    boolean deflect (Body o) {
         float dx = o.location.x - location.x,
             dy = o.location.y - location.y,
             distance = sqrt(dx*dx + dy*dy),
@@ -283,11 +300,15 @@ class Body {
             velocity.y -= ay;
             o.velocity.x += ax;
             o.velocity.y += ay;
+            //bounce.stop();
+            //bounce.play();
+            return true;
         }
+        return false;
     }
 
-    void applyForceTo (Body o) {
-        this.deflect(o);
+    boolean applyForceTo (Body o) {
+        return this.deflect(o);
         //this.applySpring(o);
     }
 
