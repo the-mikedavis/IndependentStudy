@@ -420,6 +420,8 @@ class Character extends Ball {
 
     boolean dropping, anim;
     int bounceCount, andex, frames;
+    int movement;
+    int FRAME_SPEED = 60;
     float mag;
     PVector flr;
 
@@ -430,8 +432,9 @@ class Character extends Ball {
         flr = new PVector(width / 2, 13 * height / 16 - 3);
         bounceCount = 0;
         andex = 0;
+        movement = 0;
 
-        frames = 30;
+        frames = FRAME_SPEED;
     }
 
     void run () {
@@ -439,12 +442,16 @@ class Character extends Ball {
         stroke(0);
         strokeWeight(1);
         fill(225);
+
         image(sprite[andex],
-            location.x - 30,
+            location.x - 45 + (30 * movement),
             location.y - 58);
+
         if (frames-- <= 0) {
             andex = andex + 1 == 4 ? 0 : andex + 1;
-            frames = 60;
+            if (andex == 2)
+                movement = 1 - movement;
+            frames = FRAME_SPEED;
         }
     }
 
