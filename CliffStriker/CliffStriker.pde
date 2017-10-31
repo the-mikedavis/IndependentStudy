@@ -57,7 +57,7 @@ void setup() {
     sprite = new PImage[4];
     for (int i = 0; i < sprite.length; i++) {
         sprite[i] = loadImage("tightropeguy" + i + ".png");
-        sprite[i].resize(20, 40);
+        sprite[i].resize(60, 80);
     }
 }
 
@@ -430,7 +430,8 @@ class Character extends Ball {
         flr = new PVector(width / 2, 13 * height / 16 - 3);
         bounceCount = 0;
         andex = 0;
-        frames = 15;
+
+        frames = 30;
     }
 
     void run () {
@@ -438,11 +439,12 @@ class Character extends Ball {
         stroke(0);
         strokeWeight(1);
         fill(225);
-        //ellipse(location.x, location.y, 20, 20);
-        image(sprite[andex], location.x - 10, location.y - 30);
+        image(sprite[andex],
+            location.x - 30,
+            location.y - 58);
         if (frames-- <= 0) {
             andex = andex + 1 == 4 ? 0 : andex + 1;
-            frames = 30;
+            frames = 60;
         }
     }
 
