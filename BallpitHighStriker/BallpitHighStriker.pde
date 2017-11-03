@@ -14,6 +14,7 @@ boolean render = false;
 float limit = 15.0;
 float launchConstant = 4.0;
 int root;
+int ballScale;
 
 Puck puck;
 PImage[] balls;
@@ -26,9 +27,10 @@ void setup () {
     bounce.play();
     bounce.rate(0.75);
     balls = new PImage[6];
+    ballScale = width / 10;
     for (int i = 0; i < balls.length; i++) {
         balls[i] = loadImage("ball" + i + ".png");
-        balls[i].resize(51, 51);
+        balls[i].resize(ballScale, ballScale);
     }
 
     system = new FDGraph(260);   
@@ -126,7 +128,7 @@ class FDGraph {
             for (Body b : system)
                 if (!a.equals(b)) {
                     float force = a.applyForceTo(b);
-                    if (force > 0.75)
+                    if (force > 0.95)
                         play = true;
                 }
 
@@ -228,7 +230,7 @@ class Body {
     PImage img;
 
     Body (float mass, float charge) {
-        this.radius = 50;
+        this.radius = (int) (0.95 * ballScale);
         location = new PVector(random(width), random(height));
         velocity = new PVector(0, 0);
         acceleration = new PVector(0, 0);
@@ -239,7 +241,7 @@ class Body {
     }
 
     Body (float mass, float charge, PVector location) {
-        this.radius = (int) mass * 25;
+        this.radius = (int) (0.95 * ballScale);
         this.mass = mass;
         this.charge = charge;
         this.location = location;
