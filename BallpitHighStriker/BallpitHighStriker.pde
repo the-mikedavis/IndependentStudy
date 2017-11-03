@@ -157,39 +157,26 @@ class FDGraph {
 
 class Puck extends Body {
 
-    PVector ground;
     boolean shot = false;
+    float ground, ceiling;
 
     Puck (float mass, float charge, PVector location) {
         super(mass, charge, location);
-        ground = location.copy();
-        this.radius = 25;
+        this.ground = width * 0.02;
+        this.radius = (int) ground;
+        ceiling = 2 * width / 5f;
     }
 
     void render () {
         update();
-        //stroke(0);
-        //strokeWeight(1);
-        //fill(175);
-        //ellipse(location.x, location.y, radius, radius);
-        //image(redball, location.x - radius / 2, location.y - radius / 2);
-        if (radius > 200)
+        if (radius > ceiling)
             reset();
-        if (location.y < height / 8) {
-            reflect();
-        }
-    }
-
-    void reflect() {
-        velocity.mult(-1);
     }
 
     void reset() {
-        //location = ground.copy();
         shot = false;
         velocity = new PVector(0,0);
-        radius = 25;
-        //acceleration = new PVector(0,0);
+        radius = (int) ground;
     }
 
     @Override
