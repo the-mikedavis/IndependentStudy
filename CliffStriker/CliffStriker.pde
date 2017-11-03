@@ -123,31 +123,7 @@ void keyPressed() {
 }
 
 void drawbackground() {
-    /*/  draw the sky gradient
-    color bright = color(240,248,255);
-    color sky = color(135, 206, 250);
-    color space = color(22, 22, 22);
-    setGradient(0, - height / 2, width, height, space, sky, Y_AXIS);
-    */
-    background(255);
-    /*
-    noFill();
-    stroke(204, 102, 0);
-    rect(0, 5*height/8, 3*width/8, 3*height/8);
-    rect(5*width/8, 5*height/8, 3*width/8, 3*height/8);
-    stroke(0);
-    line(3*width/8, 5*height/8, 5*width/8, 5*height/8);
-
-    pushMatrix();
-    translate(width / 2, 15 * height / 16);
-    rotateX(PI / 2.2);
-    ellipse(0, 0, width / 5, width / 5);
-    ellipse(0, 0, width / 7, width / 7);
-    ellipse(0, 0, width / 11, width / 11);
-    popMatrix();
-    */
     image(cliff, 0, 0);
-
     wind.draw();
 }
 
@@ -249,10 +225,9 @@ class Ball {
         ellipse(location.x, location.y, 20, 20);
         if (location.y > ground.y)
             reset();
-        if (location.y < height / 8) {
-            reflect();
-            //bell.ring();
-        }
+        //if (location.y < height / 8) {
+        //    reflect();
+        //}
     }
     
     void reset() {
@@ -444,7 +419,8 @@ class Character extends Ball {
         fill(225);
 
         image(sprite[andex],
-            location.x - 45 + (30 * movement),
+            dropping || anim ? location.x - 30 : 
+                location.x - 35 + (10 * movement),
             location.y - 58);
 
         if (frames-- <= 0) {
@@ -466,7 +442,7 @@ class Character extends Ball {
 
     void update() {
         if (dropping)
-            wind.gust(velocity, mag);
+            wind.gust(velocity, mag / 2);
 
         velocity.add(acceleration);
         location.add(velocity);
@@ -574,24 +550,3 @@ class WindSystem {
 
 }
 
-void setGradient(int x, int y, float w, float h, color c1, color c2, int axis ) {
-
-    noFill();
-
-    if (axis == Y_AXIS) {  // Top to bottom gradient
-        for (int i = y; i <= y+h; i++) {
-            float inter = map(i, y, y+h, 0, 1);
-            color c = lerpColor(c1, c2, inter);
-            stroke(c);
-            line(x, i, x+w, i);
-        }
-    }  
-    else if (axis == X_AXIS) {  // Left to right gradient
-        for (int i = x; i <= x+w; i++) {
-            float inter = map(i, x, x+w, 0, 1);
-            color c = lerpColor(c1, c2, inter);
-            stroke(c);
-            line(i, y, i, y+h);
-        }
-    }
-}
