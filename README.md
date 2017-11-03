@@ -23,17 +23,14 @@ things that built each project.
 
 Samples:
 
-<img src="assets/balloon_striker.jped" width="100">
-<img src="assets/ballpit_striker.jpeg" width="100">
-<img src="assets/cliff_striker.jpeg" width="100">
-<img src="assets/coulomb_striker.jpeg" width="100">
+<img src="assets/balloon_striker.jpeg" width="200"> <img src="assets/ballpit_striker.jpeg" width="200"> <img src="assets/cliff_striker.jpeg" width="200"> <img src="assets/coulomb_striker.jpeg" width="200">
 
 ## Processing Leap Motion
 
 In every Iron Man movie, Tony Stark has some cool home computer system that
 reacts to his every work and movement.
 
-<img src="assets/iron_man_2_holographics.jpg" width=200>
+<img src="assets/iron_man_2_holographics.jpg" width=500>
 
 While that may look a bit futuristic
 and farfetched, the reality is that it's pretty close to existance.
@@ -41,4 +38,4 @@ and farfetched, the reality is that it's pretty close to existance.
 Leap Motion is a small sensor that recognizes where your hands are and allows
 you to use that input to make some pretty cool stuff.
 
-<img src="assets/leap_motion_engadget.png" width="300">
+<img src="assets/leap_motion_engadget.png" width="500">
