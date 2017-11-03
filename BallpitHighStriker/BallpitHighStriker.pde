@@ -173,7 +173,7 @@ class Puck extends Body {
         //fill(175);
         //ellipse(location.x, location.y, radius, radius);
         //image(redball, location.x - radius / 2, location.y - radius / 2);
-        if (location.y > ground.y)
+        if (radius > 200)
             reset();
         if (location.y < height / 8) {
             reflect();
@@ -185,16 +185,16 @@ class Puck extends Body {
     }
 
     void reset() {
-        location = ground.copy();
+        //location = ground.copy();
         shot = false;
         velocity = new PVector(0,0);
-        acceleration = new PVector(0,0);
+        radius = 25;
+        //acceleration = new PVector(0,0);
     }
 
     @Override
         void update () {
-            velocity.add(acceleration);
-            location.add(velocity);
+            radius += velocity.mag();
         }
 
     @Override
@@ -226,11 +226,8 @@ class Puck extends Body {
     void shoot(float force) {
         if (shot)
             return;
-        /*
         velocity = new PVector(0, 
                 (float) (-launchConstant * Math.log(force)));
-        applyGravity();
-        */
         shot = true;
     }
 
