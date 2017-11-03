@@ -128,9 +128,11 @@ class FDGraph {
         boolean play = false;
         for (Body a : system) {
             for (Body b : system)
-                if (!a.equals(b))
-                    if (a.applyForceTo(b))
+                if (!a.equals(b)) {
+                    float force = a.applyForceTo(b);
+                    if (force > 0.75)
                         play = true;
+                }
 
             //a.update();
             //a.applyForceTo(puck);
@@ -205,7 +207,7 @@ class Puck extends Body {
     }
     
     @Override
-    boolean deflect (Body o) {
+    float deflect (Body o) {
         float dx = o.location.x - location.x,
             dy = o.location.y - location.y,
             distance = sqrt(dx*dx + dy*dy),
@@ -220,9 +222,9 @@ class Puck extends Body {
                 ay = (targetY - o.location.y) * spring;
             o.velocity.x += ax;
             o.velocity.y += ay;
-            return true;
+            return this.velocity.mag();
         }
-        return false;
+        return 0f;
     }
     
     void shoot(float force) {
@@ -284,7 +286,7 @@ class Body {
         acceleration.mult(0.01);
     }
     
-    boolean deflect (Body o) {
+    float deflect (Body o) {
         float dx = o.location.x - location.x,
             dy = o.location.y - location.y,
             distance = sqrt(dx*dx + dy*dy),
@@ -302,12 +304,12 @@ class Body {
             o.velocity.y += ay;
             //bounce.stop();
             //bounce.play();
-            return true;
+            return this.velocity.mag();
         }
-        return false;
+        return 0f;
     }
 
-    boolean applyForceTo (Body o) {
+    float applyForceTo (Body o) {
         return this.deflect(o);
         //this.applySpring(o);
     }
