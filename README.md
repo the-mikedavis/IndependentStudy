@@ -33,7 +33,7 @@ Samples:
 In every Iron Man movie, Tony Stark has some cool home computer system that
 reacts to his every work and movement.
 
-![Iron Man 2](samples/iron_man_2_holographics.jpg)
+![Iron Man 2](assets/iron_man_2_holographics.jpg)
 
 While that may look a bit futuristic
 and farfetched, the reality is that it's pretty close to existance.
@@ -41,4 +41,4 @@ and farfetched, the reality is that it's pretty close to existance.
 Leap Motion is a small sensor that recognizes where your hands are and allows
 you to use that input to make some pretty cool stuff.
 
-![Leap Motion](samples/leap_motion_engadget.png)
+![Leap Motion](assets/leap_motion_engadget.png)
