@@ -4,6 +4,7 @@ import processing.sound.*;
 FDGraph system;
 Body center;
 
+
 FFT fft;
 AudioIn in;
 Spline threshSpline, totalSpline, triggerSpline, baseLine;
@@ -11,7 +12,7 @@ int bands = 32;
 float scale = 2000.0, smoothing = 0.001;
 float total, average, thresh;
 boolean render = false;
-float limit = 15.0;
+float limit = 20.0;
 float launchConstant = 4.0;
 int root;
 int ballScale;
@@ -115,7 +116,7 @@ class FDGraph {
     }
 
     Body remove () {
-        return system.remove((int) Math.random() * system.size());
+        return system.remove((int) (Math.random() * system.size()));
     }
 
     Body remove (int index) {
@@ -132,15 +133,11 @@ class FDGraph {
                         play = true;
                 }
 
-            //a.update();
-            //a.applyForceTo(puck);
             puck.deflect(a);
         }
 
         int frame = (int) random(5, 10);
         if (play && (frameCount % frame) == 0) {
-            //println("play");
-            //bounce.stop();
             bounce.play();
         }
 
@@ -166,7 +163,7 @@ class Puck extends Body {
         super(mass, charge, location);
         this.ground = width * 0.02;
         this.radius = (int) ground;
-        ceiling = 2 * width / 5f;
+        ceiling = 3 * width / 5f;
     }
 
     void render () {
