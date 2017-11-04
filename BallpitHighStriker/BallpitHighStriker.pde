@@ -176,6 +176,7 @@ class Puck extends Body {
         shot = false;
         velocity = new PVector(0,0);
         radius = (int) ground;
+        ceiling = 3f * width / 5f;
     }
 
     @Override
@@ -214,9 +215,12 @@ class Puck extends Body {
             return;
 
         velocity = new PVector(0, 
-                (float) (-launchConstant * Math.log(20)));
-                
-        ceiling *= (20f / force);
+                (float) (-launchConstant * Math.log(30)));
+          
+        println(ceiling);
+        println(force);
+        ceiling *= (force / 150f);
+        println(ceiling);
         shot = true;
     }
 
