@@ -9,7 +9,7 @@ float dampen = 0f;
 float scale = 2000f, smoothing = 0.001;
 float total, average, thresh;
 boolean render = false;
-float limit = 15f;
+float limit = 20f;
 float launchConstant = 4f;
 int root;
 int Y_AXIS = 1;
