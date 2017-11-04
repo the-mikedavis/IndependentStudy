@@ -9,10 +9,10 @@ FFT fft;
 AudioIn in;
 Spline threshSpline, totalSpline, triggerSpline, baseLine;
 int bands = 32;
-float scale = 2000.0, smoothing = 0.001;
+float scale = 2000.0, smoothing = 0.005;
 float total, average, thresh;
 boolean render = false;
-float limit = 20.0;
+float limit = 15.0;
 float launchConstant = 4.0;
 int root;
 int ballScale;
@@ -22,7 +22,7 @@ PImage[] balls;
 SoundFile bounce;
 
 void setup () {
-    size(540, 960);
+    size(1080, 2048);
 
     bounce = new SoundFile(this, "ball_bounce.wav");
     bounce.play();
@@ -98,7 +98,7 @@ void keyPressed() {
     else if (key == 'd' || key == 'D')
         thresh--;
     else
-        System.out.println(thresh * limit);
+        println(thresh * limit);
 }
 
 class FDGraph {
@@ -129,7 +129,7 @@ class FDGraph {
             for (Body b : system)
                 if (!a.equals(b)) {
                     float force = a.applyForceTo(b);
-                    if (force > 0.95)
+                    if (force > 1.1)
                         play = true;
                 }
 
@@ -212,8 +212,11 @@ class Puck extends Body {
     void shoot(float force) {
         if (shot)
             return;
+
         velocity = new PVector(0, 
-                (float) (-launchConstant * Math.log(force)));
+                (float) (-launchConstant * Math.log(20)));
+                
+        ceiling *= (20f / force);
         shot = true;
     }
 
@@ -308,7 +311,7 @@ class Body {
     }
 
     void applyFriction () {
-        float c = 0.03;
+        float c = 0.045;
         float speed = velocity.mag();
         float dragMagnitude = c * speed * speed;
         PVector force = velocity.copy();
