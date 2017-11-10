@@ -25,7 +25,7 @@ Samples:
 
 <img src="assets/balloon_striker.jpeg" width="200"> <img src="assets/ballpit_striker.jpeg" width="200"> <img src="assets/cliff_striker.jpeg" width="200"> <img src="assets/coulomb_striker.jpeg" width="200">
 
-## Processing Leap Motion
+## Augmented Reality
 
 In every Iron Man movie, Tony Stark has some cool home computer system that
 reacts to his every work and movement.
@@ -35,7 +35,6 @@ reacts to his every work and movement.
 While that may look a bit futuristic
 and farfetched, the reality is that it's pretty close to existance.
 
-Leap Motion is a small sensor that recognizes where your hands are and allows
-you to use that input to make some pretty cool stuff.
+The Microsoft Hololens brings dreams like that to life. It allows you to 'project' holograms onto the world around you.
 
-<img src="assets/leap_motion_engadget.png" width="500">
+<img src="assets/hololens.jpg" width="600">
