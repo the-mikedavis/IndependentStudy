@@ -15,7 +15,6 @@ int root;
 Ball ball;
 Bell bell;
 ConfettiSystem conf;
-//BirdSystem birds;
 int particleCount = 0;
 
 SoundFile ring;
@@ -43,7 +42,7 @@ void setup() {
     ball = new Ball(new PVector(width / 2, 7 * height / 8));
     bell = new Bell();
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
-    //birds = new BirdSystem(2);
+
     ring = new SoundFile(this, "ring.mp3");
     pop = new SoundFile(this, "pop.mp3");
     //for (int i = 0; i < pops.length; i++) {
@@ -89,7 +88,6 @@ void draw() {
     
     conf.run();
     ball.run();
-    //birds.run();
     bell.draw();
 }
 
@@ -111,7 +109,7 @@ void keyPressed() {
     else if (key == 'd' || key == 'D')
         thresh--;
     else
-        System.out.println(thresh * limit);
+        println(thresh * limit);
 }
 
 class Spline {    //combination of path generator & linked list (queue style)

@@ -44,12 +44,12 @@ void setup() {
     triggerSpline = new Spline(splineCount, color(0, 255, 0));
     root = 7 * height / 8;
     
-    launchConstant = (float) height / 240;
+    launchConstant = (float) height / 200;
     
     conf = new ConfettiSystem(new PVector(width / 2, height / 8));
     ring = new SoundFile(this, "ring.mp3");
     pop = new SoundFile(this, "pop.mp3");
-    ch = new Character(new PVector(width / 2, 7 * height / 16 + 5));
+    ch = new Character(new PVector(width / 2, 7 * height / 16 + 25));
     wind = new WindSystem();
     cliff = loadImage("cliff.jpg");
     cliff.resize(width, height);
@@ -274,7 +274,8 @@ class Ball {
     }
     
     void shoot(float force) {
-        velocity = new PVector(0, (float) (-launchConstant * Math.log(force)));
+        velocity = new PVector(0, (float) 
+            (-launchConstant * Math.log(force) / Math.log(9)));
         applyGravity(new PVector(0, 0.3));
         shot = true;
     }
@@ -404,7 +405,7 @@ class Character extends Ball {
         super(location);
         dropping = false;
         anim = false;
-        flr = new PVector(width / 2, 13 * height / 16 - 3);
+        flr = new PVector(width / 2, 13 * height / 16 - 7);
         bounceCount = 0;
         andex = 0;
         movement = 0;
@@ -549,4 +550,3 @@ class WindSystem {
     }
 
 }
-

@@ -22,7 +22,7 @@ PImage[] balls;
 SoundFile bounce;
 
 void setup () {
-    size(1080, 2048);
+    size(540, 960);
 
     bounce = new SoundFile(this, "ball_bounce.wav");
     bounce.play();
@@ -214,13 +214,11 @@ class Puck extends Body {
         if (shot)
             return;
 
-        velocity = new PVector(0, 
+        velocity = new PVector(0,
                 (float) (-launchConstant * Math.log(30)));
-          
-        println(ceiling);
-        println(force);
+
+        force = force > 150 ? 150 : force;
         ceiling *= (force / 150f);
-        println(ceiling);
         shot = true;
     }
 
