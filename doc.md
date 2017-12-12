@@ -4,6 +4,8 @@ Imagine drawing with your bare hands. With Leap Motion, you can! Leap Motion
 is a controller that tracks your hands' and arms' positions without having
 to wear or pick up anything. The result is intuitive and fun to use.
 
+<img src="assets/in_game.png" width="400" height="300"/>
+
 N.B. this has been adapted to use no VR headset for the purpose of wide
 audience.
 
@@ -41,6 +43,8 @@ Go to `/Assets/LeapMotionModules/DetectionExamples/Scripts` and look (briefly)
 at `PinchDraw`. Drag that script onto the game object you just created
 (Pinch Draw).
 
+<img src="assets/pinch_draw.png" width="300"/>
+
 Check out the fields of that new script. The first should be `size`. Set
 that to 2 (one for each hand). Go to the circle next to the `Material` field
 and get the `Line Material` Material we created first. Set the draw color
@@ -64,8 +68,14 @@ occurred, is occurring, or has ended. Drag and drop this script onto
 find the `Hand Model` field. Hit the circle and select the appropriate
 CapsuleHand\_(L/R) from the scene. This binds the pinch detector to that hand.
 
+Here's an example pinch detector setup:
+
+<img src="assets/pinch_detect.png" width="300"/>
+
 Now go back to the `Pinch Draw` object. Look at the Element 0 and Element 1
 fields. Hit the circles and attach the pinch detection objects we've just
-created.
+created. Here's the final Hierarchy view:
+
+<img src="assets/hierarchy.png" height="200"/>
 
 Now you can draw! Try it out!
