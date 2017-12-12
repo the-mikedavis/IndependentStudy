@@ -4,7 +4,7 @@ _An independent study with professor Zevensuy Rodriguez_. Some of the projects
 here:
 
 - [x] Processing High Striker
-- [ ] Processing Leap Motion (_Coming Soon_)
+- [x] Unity & the Leap Motion
 
 ## Processing High Striker
 
@@ -25,7 +25,7 @@ Samples:
 
 <img src="assets/balloon_striker.jpeg" width="200"> <img src="assets/ballpit_striker.jpeg" width="200"> <img src="assets/cliff_striker.jpeg" width="200"> <img src="assets/coulomb_striker.jpeg" width="200">
 
-## Augmented Reality
+## Leap Motion
 
 In every Iron Man movie, Tony Stark has some cool home computer system that
 reacts to his every work and movement.
@@ -35,6 +35,11 @@ reacts to his every work and movement.
 While that may look a bit futuristic
 and farfetched, the reality is that it's pretty close to existance.
 
-The Microsoft Hololens brings dreams like that to life. It allows you to 'project' holograms onto the world around you.
+The Leap Motion is a device that tracks the positions of your hands, allowing you to do some pretty cool stuff.
+You can pick up and move around objects, interact with a virtual world, and even draw in 3D.
+That last one interested me, so I set about setting it up with one draw-back: I don't have a VR headset.
+It seemed to me that most of the world doesn't own a VR headset, so why only make a drawing app for those who do?
+In a very straight-forward way, that's exactly what this project does. It allows you to draw with your hands in a 3D world.
+Check out `doc.md` to see how I did it.
 
-<img src="assets/hololens.jpg" width="600">
+<img src="assets/in_game.png"/>
