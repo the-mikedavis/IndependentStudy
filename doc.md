@@ -9,6 +9,8 @@ audience.
 
 ## How to get started
 
+    import asset package
+
 You'll need a few things:
 
 - The latest build of Unity
